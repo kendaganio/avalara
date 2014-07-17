@@ -100,6 +100,31 @@ module Avalara
   rescue Exception => e
     raise Error.new(e)
   end
+
+  def self.cancel(invoice)
+    uri = [endpoint, version, 'tax', 'cancel'].join('/')
+
+    response = API.post(uri, 
+      :body => invoice.to_json,
+      :headers => API.headers_for(invoice.to_json.length),
+      :basic_auth => authentication
+    )
+
+    return case response.code
+      when 200..299
+        Response::Invoice.new(response)
+      when 400..599
+        raise ApiError.new(Response::Invoice.new(response))
+      else
+        raise ApiError.new(response)
+    end
+  rescue Timeout::Error => e
+    raise TimeoutError.new(e)
+  rescue ApiError => e
+    raise e
+  rescue Exception => e
+    raise Error.new(e)
+  end
   
   private
 
