@@ -101,12 +101,12 @@ module Avalara
     raise Error.new(e)
   end
 
-  def self.cancel(invoice)
+  def self.void(cancel)
     uri = [endpoint, version, 'tax', 'cancel'].join('/')
 
     response = API.post(uri, 
-      :body => invoice.to_json,
-      :headers => API.headers_for(invoice.to_json.length),
+      :body => cancel.to_json,
+      :headers => API.headers_for(cancel.to_json.length),
       :basic_auth => authentication
     )
 
