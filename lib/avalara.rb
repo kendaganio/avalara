@@ -112,9 +112,9 @@ module Avalara
 
     return case response.code
       when 200..299
-        Response::Invoice.new(response)
+        Response::Void.new(response)
       when 400..599
-        raise ApiError.new(Response::Invoice.new(response))
+        raise ApiError.new(Response::Void.new(response))
       else
         raise ApiError.new(response)
     end
